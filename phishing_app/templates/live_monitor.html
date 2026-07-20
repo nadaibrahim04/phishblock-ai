@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishBlock AI - Live Intercept Monitor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+    <!-- Header Navigation -->
+    <div class="border-b border-slate-800 bg-slate-850/50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <h1 class="text-xl font-bold tracking-tight text-sky-400">Live Intercept Stream</h1>
+            <a href="{{ url_for('dashboard') }}" class="text-slate-400 hover:text-slate-100 font-semibold text-sm transition-colors">← Return to Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="bg-slate-800 border border-slate-700/70 p-6 rounded-2xl shadow-xl mb-8">
+            <h2 class="text-lg font-bold text-slate-200 mb-1">Real-Time Ingestion Activity</h2>
+            <p class="text-slate-400 text-sm">This console establishes a secure Server-Sent Event (SSE) session pipeline directly into your machine learning evaluation engine.</p>
+        </div>
+
+        <!-- Live Feed Log -->
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+            <div class="bg-slate-900 px-6 py-3 border-b border-slate-800 flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Network Capture Feed
+                </span>
+                <span class="text-xs text-slate-500 font-mono">Listening on port 5000...</span>
+            </div>
+            
+            <!-- Where updates dynamically pop up -->
+            <div id="log-container" class="p-6 max-h-[500px] overflow-y-auto space-y-4 font-mono text-sm min-h-[300px]">
+                <div class="text-slate-500 italic">Initializing data sync connection link...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Javascript Engine to parse the data feed silently -->
+    <script>
+        const logContainer = document.getElementById('log-container');
+        // Listens to the backend raw data endpoint directly
+        const eventSource = new EventSource("{{ url_for('stream_email_scan') }}");
+
+        eventSource.onopen = function() {
+            logContainer.innerHTML = ''; // Clear out the init placeholder message when linked
+        };
+
+        eventSource.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            
+            // Build out clean color flags dynamically depending on what the ML engine returns
+            const isPhish = data.status === "PHISHING";
+            const badgeClass = isPhish 
+                ? "bg-red-950 text-red-400 border border-red-500/30" 
+                : "bg-emerald-950 text-emerald-400 border border-emerald-500/30";
+
+            const logEntry = document.createElement('div');
+            logEntry.className = "p-4 bg-slate-900 border border-slate-800/60 rounded-xl space-y-2 opacity-0 translate-y-2 transition-all duration-300";
+            
+            logEntry.innerHTML = `
+                <div class="flex flex-wrap justify-between items-center gap-2">
+                    <span class="text-slate-200 font-sans font-bold">Subject: ${data.subject}</span>
+                    <span class="text-xs px-2.5 py-0.5 rounded-full font-bold ${badgeClass}">${data.status} (${data.confidence})</span>
+                </div>
+                <div class="text-xs text-slate-400 break-all font-mono">Intercepted Destination: <span class="text-sky-400">${data.url}</span></div>
+            `;
+
+            // Append item and scroll layout cleanly downward
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+
+            // Trigger minor fade effect transition dynamically
+            setTimeout(() => {
+                logEntry.classList.remove('opacity-0', 'translate-y-2');
+            }, 50);
+        };
+
+        eventSource.onerror = function() {
+            const errorEntry = document.createElement('div');
+            errorEntry.className = "text-red-400 text-xs italic p-2 bg-red-950/20 border border-red-900/50 rounded-lg";
+            errorEntry.textContent = "[SYSTEM ALERT] Intermittent network streaming buffer delay detected.";
+            logContainer.appendChild(errorEntry);
+        };
+    </script>
+
+</body>
+</html>

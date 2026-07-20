@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishBlock AI - Node Provisioning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center relative bg-cover bg-center bg-no-repeat"
+      style="background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), url('/static/ui_background.png');">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="absolute top-6 left-1/2 -translate-x-1/2 w-full max-w-md px-4 z-50">
+                {% for category, message in messages %}
+                    <div class="p-4 rounded-xl border shadow-xl flex items-center justify-between {% if category == 'success' %}bg-emerald-950/90 border-emerald-500/40 text-emerald-400{% else %}bg-red-950/90 border-red-500/40 text-red-400{% endif %} backdrop-blur-sm">
+                        <span class="text-sm font-medium">{{ message }}</span>
+                        <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white ml-3 text-xs">✕</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="w-full max-w-md px-4 py-8">
+        <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl shadow-2xl p-8 backdrop-blur-md">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-black text-sky-400 tracking-tight">Create New Account</h1>
+                <p class="text-slate-400 text-xs mt-1">Register New Security Analyst Account Credentials</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('signup') }}" class="space-y-4">
+                <div>
+                    <label for="email" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
+                    <input type="email" id="email" name="email" class="w-full p-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-sky-500 transition-colors text-sm" placeholder="Enter Your Email" required>
+                </div>
+                <div>
+                    <label for="password" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Create Password</label>
+                    <input type="password" id="password" name="password" class="w-full p-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-sky-500 transition-colors text-sm" placeholder="Create Password" required>
+                </div>
+                <div>
+                    <label for="confirm_password" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="w-full p-2.5 bg-slate-900/90 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-sky-500 transition-colors text-sm" placeholder="Rewrite Password" required>
+                </div>
+                
+                <div class="bg-slate-900/50 rounded-xl p-3 border border-slate-700/40 space-y-1 text-[11px] text-slate-400">
+                    <span class="font-bold text-slate-300 block uppercase tracking-wide mb-0.5">Password Rules:</span>
+                    <p>• Minimum length threshold >= 8 characters</p>
+                    <p>• Mixture of Upper Case [A-Z] & Lower Case [a-z] bytes</p>
+                    <p>• Include numerical digits [0-9] and alpha special character tags</p>
+                </div>
+
+                <div class="flex items-start gap-2.5 pt-1">
+                    <input type="checkbox" id="terms_checkbox" required class="mt-0.5 w-4 h-4 rounded border-slate-700 bg-slate-900 text-sky-500 focus:ring-0 focus:ring-offset-0 cursor-pointer accent-sky-500">
+                    <label for="terms_checkbox" class="text-xs text-slate-400 select-none leading-relaxed">
+                        I agree to the <button type="button" onclick="toggleTermsModal(true)" class="text-sky-400 hover:text-sky-300 underline inline font-medium focus:outline-none">terms and conditions</button> regarding systemic email interception telemetry access.
+                    </label>
+                </div>
+
+                <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold p-3 rounded-xl transition-colors shadow-lg shadow-sky-950/50 mt-2 text-sm">Create Account</button>
+            </form>
+
+            <div class="mt-5 text-center text-xs border-t border-slate-700/60 pt-4">
+                <span class="text-slate-400">Already have an account?</span>
+                <a href="{{ url_for('login') }}" class="text-sky-400 hover:text-sky-300 font-semibold ml-1">Return to Login</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="terms_modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-lg shadow-2xl flex flex-col max-h-[85vh] transform scale-95 transition-transform duration-300" id="modal_card">
+            
+            <div class="p-6 border-b border-slate-700 flex items-center justify-between">
+                <h2 class="text-lg font-black text-slate-100 tracking-tight">Terms and Conditions</h2>
+                <button type="button" onclick="toggleTermsModal(false)" class="text-slate-400 hover:text-white transition-colors p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto space-y-4 text-xs text-slate-300 font-normal leading-relaxed">
+                <div>
+                    <h3 class="font-bold text-sky-400 text-xs uppercase tracking-wider mb-1">1. Authorization Scope</h3>
+                    <p>By connecting this account profile node to PhishBlock AI, you grant the core system engine permission to monitor, parse, and handle routing metadata from incoming stream targets linked to this profile.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sky-400 text-xs uppercase tracking-wider mb-1">2. Network Interception Protocol</h3>
+                    <p>Live analysis tools parse email message frameworks, subject structures, and destination Uniform Resource Locators (URLs). This tracking is restricted to checking syntax models against local Random Forest classifiers and does not involve saving the text of personal letters inside unauthorized databases.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sky-400 text-xs uppercase tracking-wider mb-1">3. Privacy and Machine Learning Tracking</h3>
+                    <p>All data processed through live pipelines is anonymized on-the-fly to update classification performance charts. No cleartext personal passwords or confidential message contents are passed along to global model training systems.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sky-400 text-xs uppercase tracking-wider mb-1">4. Operational Bounds</h3>
+                    <p>System metrics logs and dynamic alerts belong purely to the deploying agent node. You agree to run these evaluation monitors strictly within legal networks and approved security research operations.</p>
+                </div>
+            </div>
+            
+            <div class="p-4 bg-slate-900/60 border-t border-slate-700/60 text-right rounded-b-2xl">
+                <button type="button" onclick="toggleTermsModal(false)" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-5 py-2 rounded-xl transition-colors text-xs shadow-md">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTermsModal(shouldOpen) {
+            const modal = document.getElementById('terms_modal');
+            const card = document.getElementById('modal_card');
+            
+            if (shouldOpen) {
+                modal.classList.remove('hidden');
+                // Allow browser drawing engine cycle to process the hidden toggle before animating
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    card.classList.remove('scale-95');
+                }, 20);
+            } else {
+                modal.classList.add('opacity-0');
+                card.classList.add('scale-95');
+                // Hide component completely from screen layout trees once fade-out completes
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Close modal instantly if user clicks directly on the dark blurred backdrop
+        document.getElementById('terms_modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                toggleTermsModal(false);
+            }
+        });
+    </script>
+
+</body>
+</html>

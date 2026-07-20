@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishBlock AI - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+    <!-- Top Navigation Bar -->
+    <div class="border-b border-slate-800 bg-slate-850/50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <h1 class="text-xl font-bold tracking-tight text-sky-400">PhishBlock AI</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm text-slate-400">User: <strong class="text-slate-200 font-mono">{{ user }}</strong></span>
+                <a href="{{ url_for('logout') }}" class="bg-red-950/60 border border-red-500/30 text-red-400 text-xs px-3 py-1.5 rounded-lg font-semibold hover:bg-red-900 transition-colors">Log Out</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Welcome Hero Area -->
+        <div class="bg-gradient-to-br from-slate-800 to-slate-850 border border-slate-700/80 rounded-2xl p-6 mb-8 shadow-xl">
+            <h2 class="text-2xl font-bold mb-2">Welcome to your Security Terminal</h2>
+            <p class="text-slate-400 text-sm max-w-3xl leading-relaxed">PhishBlock AI uses a Random Forest Classifier trained on top of scaled infrastructure properties to identify malicious uniform resource locators in real time.</p>
+        </div>
+
+        <!-- System Modules Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Manual Analysis Module Card -->
+            <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl flex flex-col justify-between shadow-lg">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-200 mb-2">Manual URL Analysis</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">Inspect singular target domains manually. This module extracts layout dimensions, length footprints, and correlates them against Jaccard metric tables.</p>
+                </div>
+                <!-- Dynamic flask pointer to manual interface wrapper -->
+                <a href="{{ url_for('manual') }}" class="w-full text-center bg-sky-600 hover:bg-sky-600 text-white font-semibold py-3 rounded-xl transition-colors shadow-lg shadow-sky-950/40">
+                    Launch Analyzer
+                </a>
+            </div>
+
+            <!-- Live Monitoring Module Card -->
+            <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl flex flex-col justify-between shadow-lg">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-200 mb-2">Live Email Intercept Monitor</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">View simulated incoming data feeds monitored in real-time by server-sent scanning events directly over active classification streams.</p>
+                </div>
+                <!-- FIXED LINK: Now accurately targets your new UI wrapper route instead of the plain text stream or the alert box -->
+                <a href="{{ url_for('live_monitor') }}" class="w-full text-center bg-sky-600 hover:bg-sky-500 text-white font-semibold py-3 rounded-xl transition-colors shadow-lg shadow-sky-950/40">
+                    View Live Monitor
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
